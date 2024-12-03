@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -24,6 +26,7 @@ import com.example.midtermmobile.ui.component.RewardScreen
 import com.example.midtermmobile.ui.theme.MidtermMobileTheme
 import com.example.midtermmobile.viewmodel.OrderViewModel
 import com.example.midtermmobile.viewmodel.CoffeeSelectionViewModel
+import com.example.midtermmobile.viewmodel.MusicPlayerViewModel
 import com.example.midtermmobile.viewmodel.RewardPointViewModel
 import com.example.midtermmobile.viewmodel.UserInfoViewModel
 
@@ -46,11 +49,29 @@ fun MyApp() {
     val orderViewModel: OrderViewModel = viewModel()
     val rewardPointViewModel: RewardPointViewModel = viewModel()
     val userInfoViewModel: UserInfoViewModel = viewModel()
+    val musicPlayerViewModel: MusicPlayerViewModel = viewModel()
 
     userInfoViewModel.setUser(MockUserInfo.userInfo)
 
-    NavHost(navController = navController, startDestination = "home") {
-        composable("home") { HomeScreen(navController, orderViewModel =  orderViewModel) }
+    NavHost(navController = navController,
+        startDestination = "home",
+        enterTransition = {
+            // you can change whatever you want transition
+            EnterTransition.None
+        },
+        exitTransition = {
+            // you can change whatever you want transition
+            ExitTransition.None
+        }
+    ) {
+        composable("home") {
+            HomeScreen(
+                navController,
+                orderViewModel = orderViewModel,
+                userInfoViewModel = userInfoViewModel,
+                musicPlayerViewModel = musicPlayerViewModel
+            )
+        }
         composable("detail/{coffeeId}") { backStackEntry ->
             val coffeeId = backStackEntry.arguments?.getString("coffeeId")?.toIntOrNull() ?: 0
             DetailScreen(

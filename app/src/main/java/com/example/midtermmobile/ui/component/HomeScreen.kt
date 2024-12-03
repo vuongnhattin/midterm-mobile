@@ -1,5 +1,6 @@
 package com.example.midtermmobile.ui.component
 
+import android.media.MediaPlayer
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -19,21 +20,28 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.midtermmobile.R
@@ -42,23 +50,28 @@ import com.example.midtermmobile.model.Coffee
 import com.example.midtermmobile.ui.component.common.BottomNavigationBar
 import com.example.midtermmobile.ui.component.common.LoyaltyCard
 import com.example.midtermmobile.ui.theme.MidtermMobileTheme
+import com.example.midtermmobile.viewmodel.MusicPlayerViewModel
 import com.example.midtermmobile.viewmodel.OrderViewModel
+import com.example.midtermmobile.viewmodel.UserInfoViewModel
 
 @Composable
 fun HomeScreen(
     navController: NavController = rememberNavController(),
     modifier: Modifier = Modifier,
-    orderViewModel: OrderViewModel
+    orderViewModel: OrderViewModel = viewModel(),
+    userInfoViewModel: UserInfoViewModel = viewModel(),
+    musicPlayerViewModel: MusicPlayerViewModel = viewModel()
 ) {
+    val user = userInfoViewModel.info.collectAsState().value
     Column(modifier = Modifier.fillMaxSize()
         .padding(top = 24.dp)) {
-        HomeScreenHeader(navController = navController, orderViewModel = orderViewModel)
+        HomeScreenHeader(navController = navController, orderViewModel = orderViewModel, name = user.fullName, musicPlayerViewModel = musicPlayerViewModel)
         HomeScreenBody(navController = navController)
     }
 }
 
 @Composable
-fun HomeScreenHeader(modifier: Modifier = Modifier, navController: NavController, orderViewModel: OrderViewModel) {
+fun HomeScreenHeader(modifier: Modifier = Modifier, navController: NavController, orderViewModel: OrderViewModel, name: String, musicPlayerViewModel: MusicPlayerViewModel) {
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -66,14 +79,18 @@ fun HomeScreenHeader(modifier: Modifier = Modifier, navController: NavController
             .padding(horizontal = 16.dp)
     ) {
         Spacer(modifier = Modifier.height(30.dp))
-        GreetingSection(navController)
+        GreetingSection(navController, name, musicPlayerViewModel = musicPlayerViewModel)
         Spacer(modifier = Modifier.height(16.dp))
         LoyaltyCard(orderViewModel)
     }
 }
 
 @Composable
-fun GreetingSection(navController: NavController) {
+fun GreetingSection(navController: NavController, name: String, musicPlayerViewModel: MusicPlayerViewModel) {
+    val musicPlayerViewModel: MusicPlayerViewModel = viewModel()
+
+    // Observe the playing state
+    val isPlaying = musicPlayerViewModel.isPlaying.value
     Row(
         modifier = Modifier
             .fillMaxWidth(),
@@ -81,27 +98,40 @@ fun GreetingSection(navController: NavController) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = "Good morning\nAnderson",
+            text = "Good morning\n$name",
             style = MaterialTheme.typography.titleMedium.copy(color = MaterialTheme.colorScheme.onBackground),
             lineHeight = 24.sp
         )
+        IconButton(
+            onClick = {
+               musicPlayerViewModel.togglePlayback()
+            }
+        ) {
+            Icon(
+                painter = if (isPlaying) painterResource(R.drawable.pause) else painterResource(R.drawable.play),
+                contentDescription = null,
+                modifier = Modifier.size(32.dp),
+            )
+        }
         Row(verticalAlignment = Alignment.CenterVertically) {
             IconButton(onClick = {
                 navController.navigate("cart")
             }) {
                 Icon(
-                    imageVector = Icons.Default.ShoppingCart,
+                    painterResource(R.drawable.cart),
                     contentDescription = "Cart",
-                    tint = MaterialTheme.colorScheme.onBackground
+                    tint = MaterialTheme.colorScheme.onBackground,
+                    modifier = Modifier.size(24.dp)
                 )
             }
             IconButton(onClick = {
                 navController.navigate("profile")
             }) {
                 Icon(
-                    imageVector = Icons.Default.AccountCircle,
+                    painterResource(R.drawable.user),
                     contentDescription = "Profile",
-                    tint = MaterialTheme.colorScheme.onBackground
+                    tint = MaterialTheme.colorScheme.onBackground,
+                    modifier = Modifier.size(24.dp)
                 )
             }
         }

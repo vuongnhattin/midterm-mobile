@@ -14,8 +14,4 @@ data class CoffeeSelection(
     fun calculatePrice(): Double {
         return quantity * CoffeeData.findCoffeeById(coffeeId).price
     }
-
-    fun moveToHistory() {
-        status = 3
-    }
 }

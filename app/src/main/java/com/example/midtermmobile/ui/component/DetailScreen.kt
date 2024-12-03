@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.midtermmobile.R
 import com.example.midtermmobile.mock.CoffeeData
 import com.example.midtermmobile.model.CoffeeSelection
 import com.example.midtermmobile.viewmodel.OrderViewModel
@@ -299,8 +300,9 @@ private fun DetailScreenHeader(navController: NavController) {
             navController.navigate("cart")
         }) {
             Icon(
-                imageVector = Icons.Default.ShoppingCart,
-                contentDescription = null
+                painterResource(R.drawable.cart),
+                contentDescription = null,
+                modifier = Modifier.size(24.dp)
             )
         }
     }

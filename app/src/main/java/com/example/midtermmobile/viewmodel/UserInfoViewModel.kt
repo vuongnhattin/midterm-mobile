@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 class UserInfoViewModel: ViewModel() {
-    private val _info = MutableStateFlow<UserInfo>(UserInfo())
+    private val _info = MutableStateFlow(UserInfo())
     val info: StateFlow<UserInfo> = _info
 
     fun setUser(userInfo: UserInfo) {

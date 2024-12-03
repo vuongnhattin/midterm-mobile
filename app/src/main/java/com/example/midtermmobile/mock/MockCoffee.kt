@@ -20,10 +20,10 @@ object CoffeeData {
 
 object CoffeeRedeemData {
     val redeemList = listOf(
-        CoffeeRedeem(1, 1340.0),
+        CoffeeRedeem(1, 3.0),
         CoffeeRedeem(2, 1.0),
-        CoffeeRedeem(3, 900.0),
-        CoffeeRedeem(4, 1800.0),
+        CoffeeRedeem(3, 3.0),
+        CoffeeRedeem(4, 4.0),
     )
 
     fun findRedeemByCoffeeId(coffeeId: Int): CoffeeRedeem {

@@ -1,6 +1,7 @@
 package com.example.midtermmobile.viewmodel
 
 import androidx.lifecycle.ViewModel
+import com.example.midtermmobile.mock.CoffeeData
 import com.example.midtermmobile.model.CoffeeSelection
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

@@ -70,4 +70,5 @@ dependencies {
 
     implementation("androidx.navigation:navigation-compose:2.8.4")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
+    implementation("com.google.android.exoplayer:exoplayer:2.19.1")
 }
